@@ -1,0 +1,54 @@
+FROM debian:buster-slim
+
+ENV DISTRO=debian
+ENV VERSION=buster
+ENV ARCH=amd64
+
+RUN set -ex && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        ca-certificates \
+        wget apt-transport-https gnupg \
+        meson build-essential intltool mercurial devscripts \
+        libgirepository1.0-dev gobject-introspection \
+        python3-dev \
+        libidn11-dev libnss3-dev \
+        libavahi-glib-dev libavahi-client-dev \
+        libjson-glib-dev libdbus-glib-1-dev libgmime-3.0-dev \
+        libgladeui-dev libgspell-1-dev libgumbo-dev libcmark-dev \
+        help2man xvfb \
+        gtk-doc-tools \
+        libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
+        gstreamer1.0-plugins-good gstreamer1.0-plugins-bad \
+        libmeanwhile-dev \
+        libfarstream-0.2-dev \
+        libenchant-dev \
+        libxss-dev \
+        libncurses5-dev \
+        libgadu-dev \
+        libqt4-dev kdelibs5-dev \
+        libsecret-1-dev \
+    && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists
+
+RUN set -ex && \
+    wget -O - "https://packagecloud.io/pidgin/misc/gpgkey" | apt-key add - && \
+    echo "deb https://packagecloud.io/pidgin/misc/debian/ buster main" > /etc/apt/sources.list.d/pidgin-misc.list && \
+    apt-get update && \
+    apt-get install -y libwebkitgtk-3.0-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists
+
+RUN set -ex && \
+    wget -O - "https://packagecloud.io/pidgin/devel/gpgkey" | apt-key add - && \
+    echo "deb https://packagecloud.io/pidgin/devel/debian/ buster main" > /etc/apt/sources.list.d/pidgin-devel.list && \
+    apt-get update && \
+    apt-get install -y libgplugin-dev libgplugin0 gir1.2-gplugin-0.0 && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists
+
+COPY simple/build.sh /usr/local/bin/build.sh
+
+CMD ["build.sh"]
+

@@ -1,0 +1,41 @@
+environment:
+  - ARCH=amd64
+  - REPO=pidgin/builders
+  - REGISTRY_USERNAME
+  - REGISTRY_PASSWORD
+  - REGISTRY_HOST=docker.io
+
+tasks:
+  import:
+    type: docker/import
+    files:
+      - .:.
+
+  build:
+    type: docker/build
+    dockerfile: Dockerfile.${DISTRO}-${VERSION}-${ARCH}
+    tag: ${REGISTRY_HOST}/${REPO}:${DISTRO}-${VERSION}-${ARCH}
+    files:
+      - ${FILES}
+    labels:
+      - COMMIT=${HG_COMMIT}
+
+  publish:
+    type: docker/push
+    image: ${REGISTRY_HOST}/${REPO}:${DISTRO}-${VERSION}-${ARCH}
+
+  login:
+    type: docker/login
+    username: ${REGISTRY_USERNAME}
+    password: ${REGISTRY_PASSWORD}
+    server: ${REGISTRY_HOST}
+
+  logout:
+    type: docker/logout
+    server: ${REGISTRY_HOST}
+
+plans:
+  debian-buster-amd64:
+    environment: [DISTRO=debian, VERSION=buster, FILES=simple]
+    stages:
+      - tasks: [import, build]
