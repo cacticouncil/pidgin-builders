@@ -39,3 +39,14 @@ plans:
     environment: [DISTRO=debian, VERSION=buster, FILES=simple]
     stages:
       - tasks: [import, build]
+
+  build:
+    stages:
+      - tasks: [import, build]
+
+  publish:
+    environment: [REGISTRY_USERNAME, REGISTRY_PASSWORD]
+    stages:
+      - tasks: [login, publish]
+      - tasks: [logout]
+        run: always
