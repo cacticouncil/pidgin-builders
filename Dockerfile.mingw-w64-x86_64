@@ -1,0 +1,52 @@
+# vi:et:ft=dockerfile
+FROM rwgrim/msys2-cross:latest
+
+# setup the cross compile and host os
+RUN set -ex && \
+    dpkg --add-architecture i386 && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        ca-certificates build-essential gettext xz-utils pkg-config zip \
+        mingw-w64 mingw-w64-x86-64-dev mingw-w64-tools \
+        mercurial meson ninja-build help2man \
+        wine wine32 wine64 xauth xvfb \
+        libglib2.0-dev gobject-introspection \
+    && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists
+
+# install our target depedencies this includes talkatu and gplugin for now
+RUN set -ex && \
+    pacman-cross -Syy --noconfirm \
+        mingw64/mingw-w64-x86_64-adwaita-icon-theme \
+        mingw64/mingw-w64-x86_64-ca-certificates \
+        mingw64/mingw-w64-x86_64-cmark \
+        mingw64/mingw-w64-x86_64-farstream \
+        mingw64/mingw-w64-x86_64-fontconfig \
+        mingw64/mingw-w64-x86_64-freetype \
+        mingw64/mingw-w64-x86_64-gettext \
+        mingw64/mingw-w64-x86_64-glade \
+        mingw64/mingw-w64-x86_64-glib2 \
+        mingw64/mingw-w64-x86_64-gobject-introspection \
+        mingw64/mingw-w64-x86_64-gobject-introspection-runtime \
+        mingw64/mingw-w64-x86_64-gspell \
+        mingw64/mingw-w64-x86_64-gtk-doc \
+        mingw64/mingw-w64-x86_64-gtk3 \
+        mingw64/mingw-w64-x86_64-gumbo-parser \
+        mingw64/mingw-w64-x86_64-libgadu \
+        mingw64/mingw-w64-x86_64-libidn \
+        mingw64/mingw-w64-x86_64-libxml2 \
+        mingw64/mingw-w64-x86_64-lua51 \
+        mingw64/mingw-w64-x86_64-lua51-lgi \
+        mingw64/mingw-w64-x86_64-ncurses \
+        mingw64/mingw-w64-x86_64-pygobject-devel \
+        mingw64/mingw-w64-x86_64-python3 \
+        mingw64/mingw-w64-x86_64-zlib
+
+# set up all of our wrappers and other fun stuff..
+CMD ["/build.sh"]
+
+ENV MINGW_DISTRO=mingw-w64-x86_64 PREFIX=/mingw64
+
+COPY mingw/build.sh /
+

@@ -35,8 +35,17 @@ tasks:
     server: ${REGISTRY_HOST}
 
 plans:
+  debian-bullseye-amd64:
+    environment: [DISTRO=debian, VERSION=bullseye, FILES=simple]
+    stages:
+      - tasks: [import, build]
   debian-buster-amd64:
     environment: [DISTRO=debian, VERSION=buster, FILES=simple]
+    stages:
+      - tasks: [import, build]
+
+  mingw-w64-x86_64:
+    environment: [DISTRO=mingw, VERSION=w64, ARCH=x86_64, FILES=mingw]
     stages:
       - tasks: [import, build]
 
