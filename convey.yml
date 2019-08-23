@@ -20,9 +20,22 @@ tasks:
     labels:
       - COMMIT=${HG_COMMIT}
 
+  build-target:
+    type: docker/build
+    dockerfile: Dockerfile.${TARGET}
+    tag: ${REGISTRY_HOST}/${REPO}:${TARGET}
+    files:
+      - ${FILES}
+    labels:
+      - COMMIT=${HG_COMMIT}
+
   publish:
     type: docker/push
     image: ${REGISTRY_HOST}/${REPO}:${DISTRO}-${VERSION}-${ARCH}
+
+  publish-target:
+    type: docker/push
+    image: ${REGISTRY_HOST}/${REPO}:${TARGET}
 
   login:
     type: docker/login
@@ -49,6 +62,11 @@ plans:
     stages:
       - tasks: [import, build]
 
+  subproject-build:
+    environment: [TARGET=subproject-build, FILES=simple]
+    stages:
+      - tasks: [import, build-target]
+
   build:
     stages:
       - tasks: [import, build]
@@ -59,3 +77,15 @@ plans:
       - tasks: [login, publish]
       - tasks: [logout]
         run: always
+
+  build-target:
+    stages:
+      - tasks: [import, build-target]
+
+  publish-target:
+    environment: [REGISTRY_USERNAME, REGISTRY_PASSWORD]
+    stages:
+      - tasks: [login, publish-target]
+      - tasks: [logout]
+        run: always
+
