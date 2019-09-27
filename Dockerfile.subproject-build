@@ -16,7 +16,7 @@ RUN set -ex && \
         libavahi-glib-dev libavahi-client-dev \
         libjson-glib-dev libdbus-glib-1-dev libgmime-3.0-dev \
         libgladeui-dev libgspell-1-dev libgumbo-dev libcmark-dev \
-        help2man xvfb \
+        help2man xvfb xauth \
         gtk-doc-tools \
         libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
         gstreamer1.0-plugins-good gstreamer1.0-plugins-bad \
