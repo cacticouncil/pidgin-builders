@@ -1,8 +1,6 @@
 FROM debian:buster
 
-ENV DISTRO=debian
-ENV VERSION=buster
-ENV ARCH=amd64
+ENV TARGET=subproject-build
 
 RUN set -ex && \
     apt-get update && \
