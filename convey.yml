@@ -89,3 +89,8 @@ plans:
       - tasks: [logout]
         run: always
 
+  pvs-studio:
+    environment: [TARGET=pvs-studio, FILES=pvs-studio]
+    stages:
+      - tasks: [import, build-target]
+

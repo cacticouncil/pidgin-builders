@@ -1,0 +1,24 @@
+FROM pidgin/builders:subproject-build
+
+ENV PVS_STUDIO_DOWNLOAD_URL=http://files.viva64.com/pvs-studio-7.04.34029.4-x86_64.tgz
+
+MAINTAINER Gary Kramlich <grim@reaperworld.com>
+
+RUN set -ex && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends wget strace && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists
+
+RUN set -ex && \
+    cd /tmp && \
+    wget -O pvs-studio.tgz ${PVS_STUDIO_DOWNLOAD_URL} && \
+    tar zxf pvs-studio.tgz && \
+    rm pvs-studio.tgz && \
+    cd pvs-studio-* && \
+    ./install.sh && \
+    cd .. && \
+    rm -rf pvs-studio-*
+
+COPY pvs-studio/build.sh /usr/local/bin/
+
