@@ -35,6 +35,7 @@ RUN set -ex && \
         mingw64/mingw-w64-x86_64-gumbo-parser \
         mingw64/mingw-w64-x86_64-libgadu \
         mingw64/mingw-w64-x86_64-libidn \
+        mingw64/mingw-w64-x86_64-libsoup \
         mingw64/mingw-w64-x86_64-libxml2 \
         mingw64/mingw-w64-x86_64-lua51 \
         mingw64/mingw-w64-x86_64-lua51-lgi \

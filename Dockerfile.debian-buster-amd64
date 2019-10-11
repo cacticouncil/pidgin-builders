@@ -28,6 +28,7 @@ RUN set -ex && \
         libgadu-dev \
         libqt4-dev kdelibs5-dev \
         libsecret-1-dev \
+        libsoup2.4-dev \
     && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists

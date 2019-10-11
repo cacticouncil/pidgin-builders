@@ -32,6 +32,7 @@ RUN set -ex && \
         libgjs-dev \
         cmake \
         qt5-default libkf5wallet-dev \
+        libsoup2.4-dev \
     && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists
