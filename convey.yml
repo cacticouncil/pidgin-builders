@@ -1,71 +1,60 @@
 environment:
-  - ARCH=amd64
   - REPO=pidgin/builders
   - REGISTRY_USERNAME
   - REGISTRY_PASSWORD
-  - REGISTRY_HOST=docker.io
+  - REGISTRY=docker.io
 
 tasks:
   import:
     type: docker/import
-    files:
-      - .:.
+    files: .:.
 
   build:
     type: docker/build
-    dockerfile: Dockerfile.${DISTRO}-${VERSION}-${ARCH}
-    tag: ${REGISTRY_HOST}/${REPO}:${DISTRO}-${VERSION}-${ARCH}
-    files:
-      - ${FILES}
-    labels:
-      - COMMIT=${HG_COMMIT}
-
-  build-target:
-    type: docker/build
     dockerfile: Dockerfile.${TARGET}
-    tag: ${REGISTRY_HOST}/${REPO}:${TARGET}
-    files:
-      - ${FILES}
+    tag: ${REGISTRY}/${REPO}:${TARGET}
+    files: .:.
     labels:
       - COMMIT=${HG_COMMIT}
 
   publish:
     type: docker/push
-    image: ${REGISTRY_HOST}/${REPO}:${DISTRO}-${VERSION}-${ARCH}
-
-  publish-target:
-    type: docker/push
-    image: ${REGISTRY_HOST}/${REPO}:${TARGET}
+    image: ${REGISTRY}/${REPO}:${TARGET}
 
   login:
     type: docker/login
     username: ${REGISTRY_USERNAME}
     password: ${REGISTRY_PASSWORD}
-    server: ${REGISTRY_HOST}
+    server: ${REGISTRY}
 
   logout:
     type: docker/logout
-    server: ${REGISTRY_HOST}
+    server: ${REGISTRY}
+
+  clean:
+    type: docker/remove
+    quiet: true
+    images: ${REGISTRY}/${REPO}:${TARGET}
 
 plans:
   debian-bullseye-amd64:
-    environment: [DISTRO=debian, VERSION=bullseye, FILES=simple]
+    environment: TARGET=debian-bullseye-amd64
     stages:
       - tasks: [import, build]
   debian-buster-amd64:
-    environment: [DISTRO=debian, VERSION=buster, FILES=simple]
+    environment: TARGET=debian-buster-amd64
     stages:
       - tasks: [import, build]
 
   mingw-w64-x86_64:
-    environment: [DISTRO=mingw, VERSION=w64, ARCH=x86_64, FILES=mingw]
+    environment: TARGET=mingw-w64-x86_64
     stages:
       - tasks: [import, build]
 
   subproject-build:
-    environment: [TARGET=subproject-build, FILES=simple]
+    environment: TARGET=subproject-build
     stages:
-      - tasks: [import, build-target]
+      - tasks: [import, build]
 
   build:
     stages:
@@ -78,19 +67,12 @@ plans:
       - tasks: [logout]
         run: always
 
-  build-target:
-    stages:
-      - tasks: [import, build-target]
-
-  publish-target:
-    environment: [REGISTRY_USERNAME, REGISTRY_PASSWORD]
-    stages:
-      - tasks: [login, publish-target]
-      - tasks: [logout]
-        run: always
-
   pvs-studio:
-    environment: [TARGET=pvs-studio, FILES=pvs-studio]
+    environment: TARGET=pvs-studio
     stages:
-      - tasks: [import, build-target]
+      - tasks: [import, build]
+
+  clean:
+    stages:
+      - tasks: clean
 
