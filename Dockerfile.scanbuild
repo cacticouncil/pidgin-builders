@@ -1,0 +1,12 @@
+FROM pidgin/builders:subproject-build
+
+MAINTAINER Gary Kramlich <grim@reaperworld.com>
+
+RUN set -ex && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends clang-tools && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists
+
+COPY scanbuild/build.sh /usr/local/bin/
+

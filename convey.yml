@@ -37,6 +37,10 @@ tasks:
     images: ${REGISTRY}/${REPO}:${TARGET}
 
 plans:
+  clean:
+    stages:
+      - tasks: clean
+
   debian-bullseye-amd64:
     environment: TARGET=debian-bullseye-amd64
     stages:
@@ -72,7 +76,8 @@ plans:
     stages:
       - tasks: [import, build]
 
-  clean:
+  scanbuild:
+    environment: TARGET=scanbuild
     stages:
-      - tasks: clean
+      - tasks: [import, build]
 
