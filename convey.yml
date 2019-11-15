@@ -60,6 +60,11 @@ plans:
     stages:
       - tasks: [import, build]
 
+  subproject-build-clang:
+    environment: TARGET=subproject-build-clang
+    stages:
+      - tasks: [import, build]
+
   build:
     stages:
       - tasks: [import, build]

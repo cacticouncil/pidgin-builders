@@ -1,0 +1,48 @@
+FROM debian:buster
+
+ENV TARGET=subproject-build
+
+RUN set -ex && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        ca-certificates \
+        wget apt-transport-https gnupg \
+        meson build-essential intltool mercurial devscripts clang \
+        libgirepository1.0-dev gobject-introspection \
+        python3-dev \
+        libidn11-dev libnss3-dev \
+        libavahi-glib-dev libavahi-client-dev \
+        libjson-glib-dev libdbus-glib-1-dev libgmime-3.0-dev \
+        libgladeui-dev libgspell-1-dev libgumbo-dev libcmark-dev \
+        help2man xvfb xauth \
+        gtk-doc-tools \
+        libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
+        gstreamer1.0-plugins-good gstreamer1.0-plugins-bad \
+        libmeanwhile-dev \
+        libfarstream-0.2-dev \
+        libenchant-dev \
+        libxss-dev \
+        libncurses5-dev \
+        libgadu-dev \
+        libsecret-1-dev \
+        python3-dev python-gi-dev python3-gi \
+        liblua5.1-0-dev lua-lgi luarocks \
+        libtcc-dev \
+        valac \
+        libgjs-dev \
+        cmake \
+        qt5-default libkf5wallet-dev \
+        libsoup2.4-dev \
+    && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists
+
+RUN set -ex && \
+	sed -i -s 's/CipherString = DEFAULT@SECLEVEL=2/CipherString = DEFAULT@SECLEVEL=1/' /etc/ssl/openssl.cnf
+
+COPY simple/build.sh /usr/local/bin/build.sh
+
+ENV CC=clang
+
+CMD ["build.sh"]
+
