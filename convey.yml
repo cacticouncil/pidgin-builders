@@ -41,6 +41,11 @@ plans:
     stages:
       - tasks: clean
 
+  crossroad-mingw-w64:
+    environment: TARGET=crossroad
+    stages:
+      - tasks: [import, build]
+
   debian-bullseye-amd64:
     environment: TARGET=debian-bullseye-amd64
     stages:

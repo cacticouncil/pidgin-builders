@@ -5,7 +5,7 @@ FROM rwgrim/msys2-cross:latest
 RUN set -ex && \
     dpkg --add-architecture i386 && \
     apt-get update && \
-    apt-get install -y --no-install-recommends \
+    apt-get install -y --no-install-recommends -o APT::Immediate-Configure=false \
         ca-certificates build-essential gettext xz-utils pkg-config zip \
         mingw-w64 mingw-w64-x86-64-dev mingw-w64-tools \
         mercurial meson ninja-build help2man \
