@@ -7,7 +7,7 @@ RUN set -ex && \
     apt-get install -y --no-install-recommends \
         ca-certificates \
         wget apt-transport-https gnupg \
-        meson build-essential intltool mercurial devscripts clang \
+        meson build-essential intltool mercurial devscripts git clang \
         libgirepository1.0-dev gobject-introspection \
         python3-dev \
         libidn11-dev libnss3-dev \

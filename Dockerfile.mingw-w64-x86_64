@@ -8,7 +8,7 @@ RUN set -ex && \
     apt-get install -y --no-install-recommends -o APT::Immediate-Configure=false \
         ca-certificates build-essential gettext xz-utils pkg-config zip \
         mingw-w64 mingw-w64-x86-64-dev mingw-w64-tools \
-        mercurial meson ninja-build help2man \
+        mercurial meson ninja-build help2man git \
         wine wine32 wine64 xauth xvfb \
         libglib2.0-dev gobject-introspection \
     && \
