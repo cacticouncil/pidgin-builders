@@ -2,6 +2,16 @@ FROM ubuntu:focal
 
 ENV TARGET=subproject-build
 
+COPY ubuntu/tzdata.selections /
+
+RUN set -ex && \
+    debconf-set-selections -v /tzdata.selections && \
+    ln -nsf /usr/share/zoneinfo/Etc/UTC /etc/localtime && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends tzdata && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists
+
 RUN set -ex && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
