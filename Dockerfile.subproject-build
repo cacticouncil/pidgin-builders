@@ -40,9 +40,6 @@ RUN set -ex && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists
 
-RUN set -ex && \
-	sed -i -s 's/CipherString = DEFAULT@SECLEVEL=2/CipherString = DEFAULT@SECLEVEL=1/' /etc/ssl/openssl.cnf
-
 COPY simple/build.sh /usr/local/bin/build.sh
 
 CMD ["build.sh"]

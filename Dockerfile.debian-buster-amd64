@@ -5,8 +5,9 @@ ENV VERSION=buster
 ENV ARCH=amd64
 
 RUN set -ex && \
+    echo deb http://deb.debian.org/debian buster-backports main > /etc/apt/sources.list.d/backports.list && \
     apt-get update && \
-    apt-get install -y --no-install-recommends \
+    apt-get install -y --no-install-recommends -t buster-backports \
         ca-certificates \
         wget apt-transport-https gnupg \
         meson build-essential intltool mercurial devscripts git \
@@ -27,20 +28,18 @@ RUN set -ex && \
         libncurses5-dev \
         libgadu-dev \
         libsecret-1-dev \
+        python3-dev python-gi-dev python3-gi \
+        liblua5.1-0-dev lua-lgi luarocks \
+        libtcc-dev \
+        valac \
+        libgjs-dev \
         cmake \
         qt5-default libkf5wallet-dev \
         libsoup2.4-dev \
+        libperl-dev libglib-perl libglib-object-introspection-perl \
         evolution-data-server-dev libedataserver1.2-dev libebook1.2-dev libedata-book1.2-dev \
         libcanberra-dev \
     && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists
-
-RUN set -ex && \
-    wget -O - "https://packagecloud.io/pidgin/devel/gpgkey" | apt-key add - && \
-    echo "deb https://packagecloud.io/pidgin/devel/debian/ buster main" > /etc/apt/sources.list.d/pidgin-devel.list && \
-    apt-get update && \
-    apt-get install -y libgplugin-dev libgplugin0 gir1.2-gplugin-0.0 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists
 

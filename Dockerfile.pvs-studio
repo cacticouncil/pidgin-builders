@@ -1,6 +1,6 @@
 FROM pidgin/builders:subproject-build
 
-ENV PVS_STUDIO_DOWNLOAD_URL=https://files.viva64.com/pvs-studio-7.07.38234.46-x86_64.tgz
+ENV PVS_STUDIO_DOWNLOAD_URL=https://files.viva64.com/pvs-studio-7.08.39765.52-x86_64.tgz
 
 MAINTAINER Gary Kramlich <grim@reaperworld.com>
 
