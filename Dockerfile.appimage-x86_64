@@ -1,0 +1,25 @@
+FROM pidgin/builders:debian-bullseye-amd64
+
+ENV APPIMAGETOOL_URL=https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+
+RUN set -ex && \
+    wget ${APPIMAGETOOL_URL} -O /opt/appimagetool && \
+    chmod +x /opt/appimagetool && \
+    cd /opt/ && \
+    /opt/appimagetool --appimage-extract && \
+    mv /opt/squashfs-root /opt/appimagetool.AppDir && \
+    ln -s /opt/appimagetool.AppDir/AppRun /usr/local/bin/appimagetool && \
+    rm /opt/appimagetool
+
+RUN set -ex && \
+    apt-get update && \
+    apt-get install -y python3-pip patchelf && \
+    apt-get clean -y && \
+    rm -rf /var/lib/apt/lists && \
+    pip3 install appimage-builder && \
+    ln -sf /usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders /usr/bin/gdk-pixbuf-query-loaders
+
+COPY appimage/build.sh /usr/local/bin/build.sh
+
+CMD ["build.sh"]
+

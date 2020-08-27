@@ -37,6 +37,11 @@ tasks:
     images: ${REGISTRY}/${REPO}:${TARGET}
 
 plans:
+  appimage-x86_64:
+    environment: TARGET=appimage-x86_64
+    stages:
+      - tasks: [import, build]
+
   clean:
     stages:
       - tasks: clean
