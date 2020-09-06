@@ -15,13 +15,18 @@
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 TARGET="${TARGET:-unknown}"
-RECIPE="${RECIPE:-packaging/AppImageBuilder.yml}"
+RECIPE="${RECIPE:-pidgin3}"
+RECIPE_PATH="${RECIPE_PATH:-packaging/${RECIPE}.AppImageBuilder.yml}"
+
+BUILD_NUMBER="${BUILD_NUMBER:-0}"
+COMMIT="${HG_COMMIT_SHORT:-unknown-rev}"
+VERSION="${VERSION:-${BUILD_NUMBER}~${COMMIT_SHORT}}"
 
 cd "${HOME}"
 
-meson -Dconsoleui=False --prefix=/usr --buildtype=release "${CONVEY_WORKSPACE}" build
+meson ${CONFIGURE_ARGS} --prefix=/usr --buildtype=release "${CONVEY_WORKSPACE}" build
 DESTDIR=$(pwd)/AppDir ninja -C build install
-appimage-builder --skip-tests --recipe "${CONVEY_WORKSPACE}/${RECIPE}"
+appimage-builder --skip-tests --recipe "${CONVEY_WORKSPACE}/${RECIPE_PATH}"
 
 mkdir -p "${CONVEY_WORKSPACE}/${TARGET}"
 mv *.AppImage "${CONVEY_WORKSPACE}/${TARGET}/"

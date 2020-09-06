@@ -9,7 +9,7 @@ RUN set -ex && \
         ca-certificates build-essential gettext xz-utils pkg-config zip \
         mingw-w64 mingw-w64-x86-64-dev mingw-w64-tools \
         mercurial meson ninja-build help2man git \
-        wine wine32 wine64 xauth xvfb \
+        wine wine32 wine64 \
         libglib2.0-dev gobject-introspection \
     && \
     apt-get clean && \
