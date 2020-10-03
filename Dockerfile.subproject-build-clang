@@ -20,7 +20,6 @@ RUN set -ex && \
         gstreamer1.0-plugins-good gstreamer1.0-plugins-bad \
         libmeanwhile-dev \
         libfarstream-0.2-dev \
-        libenchant-dev \
         libxss-dev \
         libncurses5-dev \
         libgadu-dev \
