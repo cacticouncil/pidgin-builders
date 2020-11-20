@@ -42,7 +42,7 @@ RUN set -ex && \
         valac \
         libgjs-dev \
         cmake \
-        qt5-default libkf5wallet-dev \
+        libkf5wallet-dev \
         libsoup2.4-dev \
         libperl-dev libglib-perl libglib-object-introspection-perl \
         evolution-data-server-dev libedataserver1.2-dev libebook1.2-dev libedata-book1.2-dev \
