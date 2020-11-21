@@ -16,7 +16,7 @@ RUN set -ex && \
     apt-get install -y python3-pip patchelf && \
     apt-get clean -y && \
     rm -rf /var/lib/apt/lists && \
-    pip3 install appimage-builder
+    pip3 install git+https://github.com/AppImageCrafters/appimage-builder.git
 
 # make sure that gdk-pixbuf-query-loaders ends up on the path
 ENV PATH=/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0:$PATH
