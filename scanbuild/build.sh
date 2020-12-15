@@ -19,7 +19,7 @@ cd ${CONVEY_WORKSPACE}
 
 BUILD_DIR="build-scanbuild"
 
-meson -Dvapi=false ${BUILD_DIR}
+meson -Dgplugin:vapi=false ${BUILD_DIR}
 ninja -C ${BUILD_DIR} scan-build
 
 # ninja doesn't pass --status-bugs to scan-build so we have to get hacky...
