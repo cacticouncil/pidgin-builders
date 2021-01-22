@@ -17,8 +17,14 @@
 
 cd ${CONVEY_WORKSPACE}
 
+PVS_IGNORED_CODES=${PVS_IGNORED_CODES:-}
+
 BUILD_DIR="build-pvs-studio"
-PLOG_ARGS="--excludedCodes V011,V1042"
+PLOG_ARGS="--excludedCodes V011,V568,V1042"
+
+if [ -n "${PVS_IGNORED_CODES}" ]; then
+    PLOG_ARGS="${PLOG_ARGS},${PVS_IGNORED_CODES}"
+fi
 
 # don't leak our secrets via `set -x`
 set +x
@@ -44,7 +50,7 @@ echo "creating compile_commands.json"
 ninja -t compdb
 
 # run the analyzer
-pvs-studio-analyzer analyze -l /license -o pvs-studio.log
+pvs-studio-analyzer analyze -l /license -o pvs-studio.log --disableLicenseExpirationCheck
 
 # convert the output to html
 plog-converter -a GA:1,2 -t fullhtml -o pvs-studio -p ${HG_REMOTE} -v ${HG_COMMIT} ${PLOG_ARGS} pvs-studio.log
