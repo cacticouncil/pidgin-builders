@@ -48,4 +48,5 @@ RUN set -ex && \
 CMD ["/build.sh"]
 
 ENV MINGW_DISTRO=mingw-w64-x86_64 PREFIX=/mingw64 TARGET=subproject-build
-COPY cross-bullseye-w64 /build.sh /
+
+COPY cross-bullseye-w64/build.sh /
