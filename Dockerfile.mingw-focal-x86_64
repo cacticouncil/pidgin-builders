@@ -1,0 +1,111 @@
+FROM ubuntu:focal
+
+ENV TARGET=subproject-build
+
+COPY mingw/tzdata.selections /
+
+# set up timezone and install busybox
+RUN set -ex && \
+    debconf-set-selections -v /tzdata.selections && \
+    ln -nsf /usr/share/zoneinfo/Etc/UTC /etc/localtime && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends tzdata busybox && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists
+
+# manually usrmerge because pacman is expecting it
+RUN set -ex && \
+    busybox mv /sbin/* /usr/sbin/ && \
+    busybox rmdir sbin && \
+    busybox ln -s /usr/sbin /sbin && \
+    busybox mv /lib/x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu && \
+    busybox rmdir /lib/x86_64-linux-gnu && \
+    busybox rm -rf /usr/lib/udev && \
+    busybox mv /lib/* /usr/lib/ && \
+    busybox rmdir /lib && \
+    busybox ln -s /usr/lib/ /lib && \
+    busybox mkdir /usr/lib64 && \
+    busybox mv /lib64/* /usr/lib64/ && \
+    busybox rmdir /lib64 && \
+    busybox ln -s /usr/lib64 /lib64 && \
+    busybox mv /bin/* /usr/bin/ && \
+    hash -r && \
+    busybox rmdir /bin && \
+    busybox ln -s /usr/bin/ /bin
+
+# Get our base dependencies
+RUN set -ex && \
+    apt-get update && \
+    apt-get install -y wget xz-utils gnupg2 libarchive-tools file zstd && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists
+COPY mingw/sync/ /var/lib/pacman/sync/
+COPY mingw/etc/ /etc/
+COPY mingw/bin/ /usr/local/bin/
+COPY mingw/share/ /usr/share/
+COPY mingw/keyrings/ /usr/share/pacman/keyrings/
+
+# Install pacman-static
+RUN set -ex && \
+    wget -O /usr/local/bin/pacman https://pkgbuild.com/~eschwartz/repo/x86_64-extracted/pacman-static && \
+    chmod +x /usr/local/bin/pacman
+
+# setup pacman-key
+RUN set -ex && \
+    pacman-key --init && \
+    pacman-key --populate msys2
+
+# setup our cross root
+RUN set -ex && \
+    mkdir -p /windows/etc /windows/var/lib/pacman /windows/var/log /windows/tmp && \
+    pacman-cross -Syu && \
+    pacman-cross -Syy --noconfirm msys/pacman
+
+# setup the cross compile and host os
+RUN set -ex && \
+    dpkg --add-architecture i386 && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends -o APT::Immediate-Configure=false \
+        ca-certificates build-essential gettext xz-utils pkg-config zip \
+        mingw-w64 mingw-w64-x86-64-dev mingw-w64-tools \
+        cmake mercurial meson ninja-build help2man git \
+        wine wine32 wine64 \
+        libglib2.0-dev gobject-introspection \
+    && \
+    apt-get clean
+
+# install our target depedencies this includes talkatu and gplugin for now
+RUN set -ex && \
+    pacman-cross -Syy --noconfirm \
+        mingw64/mingw-w64-x86_64-adwaita-icon-theme \
+        mingw64/mingw-w64-x86_64-ca-certificates \
+        mingw64/mingw-w64-x86_64-cmark \
+        mingw64/mingw-w64-x86_64-farstream \
+        mingw64/mingw-w64-x86_64-fontconfig \
+        mingw64/mingw-w64-x86_64-freetype \
+        mingw64/mingw-w64-x86_64-gettext \
+        mingw64/mingw-w64-x86_64-glade \
+        mingw64/mingw-w64-x86_64-glib2 \
+        mingw64/mingw-w64-x86_64-gobject-introspection \
+        mingw64/mingw-w64-x86_64-gobject-introspection-runtime \
+        mingw64/mingw-w64-x86_64-gspell \
+        mingw64/mingw-w64-x86_64-gtk-doc \
+        mingw64/mingw-w64-x86_64-gtk3 \
+        mingw64/mingw-w64-x86_64-gumbo-parser \
+        mingw64/mingw-w64-x86_64-libgadu \
+        mingw64/mingw-w64-x86_64-libidn \
+        mingw64/mingw-w64-x86_64-libsoup \
+        mingw64/mingw-w64-x86_64-libxml2 \
+        mingw64/mingw-w64-x86_64-lua51 \
+        mingw64/mingw-w64-x86_64-lua51-lgi \
+        mingw64/mingw-w64-x86_64-ncurses \
+        mingw64/mingw-w64-x86_64-pygobject-devel \
+        mingw64/mingw-w64-x86_64-python3 \
+        mingw64/mingw-w64-x86_64-zlib
+
+# set up all of our wrappers and other fun stuff..
+CMD ["/build.sh"]
+
+ENV MINGW_DISTRO=mingw-w64-x86_64 PREFIX=/mingw64
+
+COPY mingw/build.sh /

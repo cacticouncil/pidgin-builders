@@ -1,27 +1,17 @@
 #!/bin/sh -ex
-# Copyright (C) 2015-2019  Gary Kramlich <grim@reaperworld.com>
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 
-export SRC_DIR="${CONVEY_WORKSPACE}"
-export BUILD_DIR=`pwd`
+cd "${CONVEY_WORKSPACE}"
 
-cp "${CONVEY_WORKSPACE}/packaging/mingw/PKGBUILD" .
+TARGET="${TARGET:-unknown}"
 
-MINGW_PACKAGE_PREFIX="${MINGW_DISTRO}" makepkg-cross
+BUILD_DIR="build-${TARGET}"
 
-mkdir -p "${CONVEY_WORKSPACE}/${MINGW_DISTRO}"
-mv *.tar.xz "${CONVEY_WORKSPACE}/${MINGW_DISTRO}"
+#meson build-win64 --cross-file win32_cross.txt --prefix=/mingw64/ -Dconsoleui=false -Dintrospection=false -Dvv=disabled  -Dlibdir=lib
+#export PKG_CONFIG_PATH=/windows/mingw64/lib/pkgconfig
+#export PKG_CONFIG_SYSROOT_DIR=/pidgin-source/
 
+#meson "${BUILD_DIR}"
+#ninja -C "${BUILD_DIR}" test
+#ninja -C "${BUILD_DIR}" $(ninja -C "${BUILD_DIR}" -t targets | cut -d: -f1 | grep -E '[a-z]+-doc$')
+
+while true; do sleep 1000; done

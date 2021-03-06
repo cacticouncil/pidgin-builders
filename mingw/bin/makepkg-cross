@@ -1,0 +1,15 @@
+#!/bin/sh
+
+if [ -z "${MINGW_PACKAGE_PREFIX}" ] ; then
+	echo "MINGW_PACKAGE_PREFIX environment variable is not set"
+	echo "Please set it to mingw-w64-i686 or mingw-w64-x86_64"
+	exit 1
+fi
+
+export PACMAN=pacman-cross
+export TEXTDOMAINDIR=/windows/usr/share/locale
+export LIBRARY=/windows/usr/share/makepkg
+export MAKEPKG_CONF=/windows/etc/makepkg.conf
+
+/windows/usr/bin/makepkg $@
+

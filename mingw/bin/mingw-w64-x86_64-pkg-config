@@ -1,0 +1,6 @@
+#!/bin/sh
+
+PKG_CONFIG_SYSROOT_DIR=/windows PKG_CONFIG_PATH=/windows/mingw64/lib/pkgconfig/ pkg-config $@
+
+exit $?
+
