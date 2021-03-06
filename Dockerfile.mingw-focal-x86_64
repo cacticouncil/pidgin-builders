@@ -13,26 +13,6 @@ RUN set -ex && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists
 
-# manually usrmerge because pacman is expecting it
-RUN set -ex && \
-    busybox mv /sbin/* /usr/sbin/ && \
-    busybox rmdir sbin && \
-    busybox ln -s /usr/sbin /sbin && \
-    busybox mv /lib/x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu && \
-    busybox rmdir /lib/x86_64-linux-gnu && \
-    busybox rm -rf /usr/lib/udev && \
-    busybox mv /lib/* /usr/lib/ && \
-    busybox rmdir /lib && \
-    busybox ln -s /usr/lib/ /lib && \
-    busybox mkdir /usr/lib64 && \
-    busybox mv /lib64/* /usr/lib64/ && \
-    busybox rmdir /lib64 && \
-    busybox ln -s /usr/lib64 /lib64 && \
-    busybox mv /bin/* /usr/bin/ && \
-    hash -r && \
-    busybox rmdir /bin && \
-    busybox ln -s /usr/bin/ /bin
-
 # Get our base dependencies
 RUN set -ex && \
     apt-get update && \
@@ -68,13 +48,14 @@ RUN set -ex && \
     apt-get install -y --no-install-recommends -o APT::Immediate-Configure=false \
         ca-certificates build-essential gettext xz-utils pkg-config zip \
         mingw-w64 mingw-w64-x86-64-dev mingw-w64-tools \
-        cmake mercurial meson ninja-build help2man git \
+        cmake mercurial meson ninja-build help2man git valac \
         wine wine32 wine64 \
         libglib2.0-dev gobject-introspection \
     && \
     apt-get clean
 
 # install our target depedencies this includes talkatu and gplugin for now
+#mingw-w64-x86_64-gplugin?
 RUN set -ex && \
     pacman-cross -Syy --noconfirm \
         mingw64/mingw-w64-x86_64-adwaita-icon-theme \
