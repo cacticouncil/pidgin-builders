@@ -1,5 +1,5 @@
 # vi:et:ft=dockerfile
-FROM rwgrim/msys2-cross:latest
+FROM cacticouncil/msys2-cross:latest
 
 # setup the cross compile and host os
 RUN set -ex && \
