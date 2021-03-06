@@ -1,11 +1,14 @@
 #!/bin/sh -ex
-#ENV MINGW_DISTRO=mingw-w64-x86_64 PREFIX=/mingw64
 
 cd "${CONVEY_WORKSPACE}"
 
 TARGET="${TARGET:-unknown}"
 
 BUILD_DIR="build-${TARGET}"
+
+#meson build-win64 --cross-file win32_cross.txt --prefix=/mingw64/ -Dconsoleui=false -Dintrospection=false -Dvv=disabled  -Dlibdir=lib
+#export PKG_CONFIG_PATH=/windows/mingw64/lib/pkgconfig
+#export PKG_CONFIG_SYSROOT_DIR=/pidgin-source/
 
 #meson "${BUILD_DIR}"
 #ninja -C "${BUILD_DIR}" test
